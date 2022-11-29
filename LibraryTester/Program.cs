@@ -1,5 +1,6 @@
 ﻿
 using Stt_ShowCase.Models;
+using Stt_ShowCase.Tools;
 using UtilityLibraries;
 using static UtilityLibraries.StringLibrary;
 
@@ -7,9 +8,16 @@ class Program
 {
 	static void Main(string[] args)
 	{
-
+		User t = new User
+		{
+			Msisdn = "54120892",
+			NumWallet = "0098513479552036"
+		};
+		User w = ObjectCopier.CloneJson(t);
+		//SendMail.SendMailToSomeone("TESTING", "This is email is a test of my patience and your braveness");
+		Console.WriteLine("\n\rThis is a copy of another object "+w.ToString());
 		#region ADD EVENT LISTENER
-		Console.WriteLine("PRESS ANY BUTTON TO CONTINUE !");
+		Console.WriteLine("\n\rPRESS ANY BUTTON TO CONTINUE !");
 		var key = Console.ReadLine();
 		if (!string.IsNullOrEmpty(key))
 		{
@@ -122,7 +130,7 @@ class Program
 		Button btn = new Button();
 		btn.ClickEvent += (s, args) =>
 		{
-			Console.WriteLine($"{args.Name} YOU MAY CONTINUE TO USE THIS TEST!");
+			Console.WriteLine($" {args.Name} YOU MAY CONTINUE TO USE THIS TEST!");
 		};
 		//launch logic heare
 		btn.OnClick();

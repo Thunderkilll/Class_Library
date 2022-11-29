@@ -1,7 +1,8 @@
 ﻿using ClosedXML.Excel;
 using System.Data;
 using System.Text;
-
+using System.Net;
+using System.Net.Mail;
 namespace UtilityLibraries;
 
 public static class StringLibrary
@@ -153,7 +154,47 @@ public static class StringLibrary
 
 	public static void GetColumnValue<T>(object obj)
 	{
-		Console.WriteLine("this is" + obj.ToString());
+		Console.WriteLine("this is " + obj.ToString());
+	}
+
+	/// <summary>
+	/// Send Email Notification with Gmail
+	/// </summary>
+	/// <param name="subject"></param>
+	/// <param name="body"></param>
+	public static void SendMailToSomeone(string subject, string body)
+	{
+		try
+		{
+			var fromAddress = new MailAddress("khaledguesmi666@gmail.com", "From Myself");
+			var toAddress = new MailAddress("khaled.guesmi@esprit.tn", "To Myself");
+			const string fromPassword = "mlnyghjnbwtbclxr";
+			//const string fromPassword = "Khaled123120";
+
+
+			var smtp = new SmtpClient
+			{
+				Host = "smtp.gmail.com",
+				Port = 587,
+				EnableSsl = true,
+				DeliveryMethod = SmtpDeliveryMethod.Network,
+				UseDefaultCredentials = false,
+				Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+			};
+			using (var message = new MailMessage(fromAddress, toAddress)
+			{
+				Subject = subject,
+				Body = body
+			})
+			{
+				smtp.Send(message);
+			}
+		}
+		catch (Exception ex)
+		{
+
+			Console.WriteLine(ex.Message);
+		}
 	}
 	public class User
 	{
@@ -164,9 +205,10 @@ public static class StringLibrary
 			Msisdn = msisdn;
 			NumWallet = numWallet;
 		}
-		public User()
+		public User(){}
+		public override string ToString()
 		{
-
+			return $" Phone number {Msisdn} , wallet number {NumWallet}";
 		}
 	}
 	public class Operation
