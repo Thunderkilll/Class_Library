@@ -1,4 +1,6 @@
-﻿using UtilityLibraries;
+﻿
+using Stt_ShowCase.Models;
+using UtilityLibraries;
 using static UtilityLibraries.StringLibrary;
 
 class Program
@@ -6,6 +8,15 @@ class Program
 	static void Main(string[] args)
 	{
 
+		#region ADD EVENT LISTENER
+		Console.WriteLine("PRESS ANY BUTTON TO CONTINUE !");
+		var key = Console.ReadLine();
+		if (!string.IsNullOrEmpty(key))
+		{
+			OnClickListener();
+		}
+
+		#endregion
 		#region EXPORT USER MSISDN TO EXCEL
 		//list to export
 		List<User> user_ops = new List<User>();
@@ -101,6 +112,18 @@ class Program
 		#endregion
 
 	}
-
-
+	 
+	/// <summary>
+	/// Onclick event listener I created locally 
+	/// </summary>
+	public static void OnClickListener()
+	{
+		Button btn = new Button();
+		btn.ClickEvent += (s ,args) =>
+		{
+			Console.WriteLine($"{args.Name} YOU MAY CONTINUE TO USE THIS TEST!");
+		};
+		//launch logic heare
+		btn.OnClick();
+	}
 }
