@@ -53,56 +53,107 @@ public static class StringLibrary
 	/// Create an Excel file from list of data
 	/// </summary>
 	/// <param name="ops"></param>
-	public static void ExportOperationsToExcel(List<Operation> ops)
+	public static void ExportOperationsToExcel(List<Operation> ops, string path)
 	{
-		DataTable dt = new DataTable("Operations");
-		dt.Columns.AddRange(new DataColumn[4] { new DataColumn("Index"),
+		try
+		{
+			if (ops.Count > 0 && ops != null)
+			{
+				DataTable dt = new DataTable("Operations");
+				dt.Columns.AddRange(new DataColumn[4] { new DataColumn("Index"),
 												new DataColumn("Description"),
 												new DataColumn("Date"),
 												new DataColumn("Result")
-		});
+					});
 
-		//fill datatable
-		foreach (var emp in ops)
-		{
-			dt.Rows.Add(emp.Index , emp.Description , emp.Date , emp.Result);
+				//fill datatable
+				foreach (var emp in ops)
+				{
+					dt.Rows.Add(emp.Index, emp.Description, emp.Date, emp.Result);
+				}
+				//using ClosedXML.Excel;
+				using (XLWorkbook wb = new XLWorkbook())
+				{
+					wb.Worksheets.Add(dt);
+
+					if (!string.IsNullOrEmpty(path))
+					{
+						wb.SaveAs(path + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".xlsx");
+					}
+					else
+					{
+						wb.SaveAs(@"C:\Users\kh.guesmi\Documents\documents\db\ReportOperations_" + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".xlsx");
+					}
+				}
+			}
 		}
-		//using ClosedXML.Excel;
-		using (XLWorkbook wb = new XLWorkbook())
+		catch (Exception ex)
 		{
-			wb.Worksheets.Add(dt);
-			 
-		    wb.SaveAs(@"C:\Users\kh.guesmi\Documents\documents\db\ReportOperations_"+ DateTime.Now.ToString("dd_MM_HH")+".xlsx");
-		         
+
+			string pathExp = @"C:\Users\kh.guesmi\Documents\documents\db\ExceptioReport_" + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".txt";
+
+			// Delete the file if it exists.
+			if (File.Exists(pathExp))
+			{
+				File.Delete(pathExp);
+			}
+			//Create the file.
+			using (FileStream fs = File.Create(pathExp))
+			{
+				AddText(fs, "Today we have this exception "+ex.Message + " at " + DateTime.Now.ToString("dd_MM_HH_mmssfff") +".");
+			}
 		}
 	}
 
 
-	public static void ExportUserInfoToExcel(List<User> ops)
+	public static void ExportUserInfoToExcel(List<User> ops, string path)
 	{
-		DataTable dt = new DataTable("Operations");
-		dt.Columns.AddRange(new DataColumn[2] { new DataColumn("MSISDN"),
+		try
+		{
+			DataTable dt = new DataTable("Operations");
+			dt.Columns.AddRange(new DataColumn[2] { new DataColumn("MSISDN"),
 												new DataColumn("NumWallet")
-		});
+					});
 
-		//fill datatable
-		foreach (var emp in ops)
-		{
-			dt.Rows.Add(emp.Msisdn, emp.NumWallet);
+			//fill datatable
+			foreach (var emp in ops)
+			{
+				dt.Rows.Add(emp.Msisdn, emp.NumWallet);
+			}
+			//using ClosedXML.Excel;
+			using (XLWorkbook wb = new XLWorkbook())
+			{
+				wb.Worksheets.Add(dt);
+				if (!string.IsNullOrEmpty(path))
+				{
+					wb.SaveAs(path + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".xlsx");
+				}
+				else
+				{
+					wb.SaveAs(@"C:\Users\kh.guesmi\Documents\documents\db\ReportUserInfo_" + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".xlsx");
+				}
+			}
 		}
-		//using ClosedXML.Excel;
-		using (XLWorkbook wb = new XLWorkbook())
+		catch (Exception ex)
 		{
-			wb.Worksheets.Add(dt);
+			string pathExp = @"C:\Users\kh.guesmi\Documents\documents\db\ExceptioReport_" + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".txt";
 
-			wb.SaveAs(@"C:\Users\kh.guesmi\Documents\documents\db\ReportUserInfo  _" + DateTime.Now.ToString("dd_MM_HH") + ".xlsx");
-
+			// Delete the file if it exists.
+			if (File.Exists(pathExp))
+			{
+				File.Delete(pathExp);
+			}
+			//Create the file.
+			using (FileStream fs = File.Create(pathExp))
+			{
+				AddText(fs, "Today we have this exception " + ex.Message + " at " + DateTime.Now.ToString("dd_MM_HH_mmssfff") + ".");
+			}
 		}
 	}
 
 	public static void GetColumnValue<T>(object obj)
 	{
-		Console.WriteLine("this is"+obj.ToString());
+		Console.WriteLine("this is" + obj.ToString());
 	}
 	public class User
 	{
@@ -120,7 +171,7 @@ public static class StringLibrary
 	}
 	public class Operation
 	{
-	 
+
 		public Operation()
 		{
 			Index = "0";
